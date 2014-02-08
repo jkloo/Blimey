@@ -1,0 +1,9 @@
+[
+    { "keys": ["ctrl+shift+c"], "command": "convert_misra" },
+    { "keys": ["alt+c"], "command": "convert_misra_types" },
+    { "keys": ["ctrl+alt+c"], "command": "convert_misra_pnd_defs" },
+    { "keys": ["shift+alt+c"], "command": "convert_misra_protect_pnd_defs" },
+    { "keys": ["ctrl+alt+b"], "command": "show_panel", "args": {"panel": "output.exec"}},
+    { "keys": ["alt+,"], "command": "split_on", "args":{"split_char": ","}},
+    { "keys": ["f8"], "command": "permute_lines", "args": {"operation": "unique"}}
+]
