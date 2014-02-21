@@ -8,7 +8,6 @@ class SplitOnCommand(sublime_plugin.TextCommand):
         split_char = kwargs.get('split_char', '')
         if split_char:
             le = '\n'
-            edit = self.view.begin_edit()
             for selection in selections:
                 current_line = self.view.line(selection)
                 padding = ' ' * (selection.begin() - current_line.begin())
@@ -17,4 +16,3 @@ class SplitOnCommand(sublime_plugin.TextCommand):
                 elements[1:] = [padding + x for x in elements[1:]]
                 new_text = (split_char + le).join(elements)
                 self.view.replace(edit, selection, new_text)
-        self.view.end_edit(edit)
