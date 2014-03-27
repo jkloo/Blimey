@@ -35,8 +35,6 @@ class Heading(object):
         self.value = ''
 
     def format_value(self, levels):
-        print(self.format)
-        print(levels)
         self.value = self.format.format(*levels)
 
     def __str__(self):
@@ -46,10 +44,8 @@ class Heading(object):
 class MarkdownHeadings(sublime_plugin.TextCommand):
 
     def run(self, edit, **kwargs):
-        print('running')
         regions = self.view.find_all(r'^(#+)[ \t]*[\d\.]*[ \t]*(.*)$')
         headings = []
-        print(len(regions))
         for r in regions:
             headings.append(Heading(self.view.substr(r)))
         levels = [0]
