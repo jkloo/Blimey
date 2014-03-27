@@ -31,7 +31,7 @@ class Heading(object):
         if self.level == 1:
             self.format = "{0}.0"
         else:
-            self.format = '.'.join(['{{{}}}'.format(i) for i in range(self.level)])
+            self.format = '.'.join(['{{{v}}}'.format(v=i) for i in range(self.level)])
         self.value = ''
 
     def format_value(self, levels):
