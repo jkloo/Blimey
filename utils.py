@@ -22,10 +22,11 @@ class SplitOnCommand(sublime_plugin.TextCommand):
                 self.view.replace(edit, selection, new_text)
 
 
+HEADING_P = r'^(#+)[ \t]*[\d\.]*[ \t]*(.*)$'
+
 class Heading(object):
     def __init__(self, line):
-        P = r'^(#+)[ \t]*[\d\.]*[ \t]*(.*)$'
-        m = re.match(P, line)
+        m = re.match(HEADING_P, line)
         self.level = len(m.group(1))
         self.text = m.group(2)
         if self.level == 1:
@@ -35,7 +36,15 @@ class Heading(object):
         self.value = ''
 
     def format_value(self, levels):
-        self.value = self.format.format(*levels)
+        if self.level > len(levels):
+            levels.append(1)
+        elif self.level == len(levels):
+            levels[-1] += 1
+        else:
+            levels[self.level - 1] += 1
+            levels[self.level: ] = [0] * len(levels[self.level: ])
+        self.value = self.format.format(*levels[:self.level])
+        return levels
 
     def __str__(self):
         return ' '.join(['#' * self.level, self.value, self.text])
@@ -44,20 +53,13 @@ class Heading(object):
 class MarkdownHeadings(sublime_plugin.TextCommand):
 
     def run(self, edit, **kwargs):
-        regions = self.view.find_all(r'^(#+)[ \t]*[\d\.]*[ \t]*(.*)$')
+        regions = self.view.find_all(HEADING_P)
         headings = []
-        for r in regions:
-            headings.append(Heading(self.view.substr(r)))
         levels = [0]
-        for h in headings:
-            if h.level > len(levels):
-                levels.append(1)
-            elif h.level == len(levels):
-                levels[-1] += 1
-            else:
-                levels[h.level - 1] += 1
-                levels[h.level: ] = [0] * len(levels[h.level: ])
-            h.format_value(levels[:h.level])
+        for r in regions:
+            h = Heading(self.view.substr(r))
+            levels = h.format_value(levels)
+            headings.append(h)            
         headings.reverse()
         regions.reverse()
         for i in range(len(regions)):
