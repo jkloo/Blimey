@@ -66,7 +66,8 @@ class MarkdownHeadings(sublime_plugin.TextCommand):
             self.view.replace(edit, regions[i], str(headings[i]))
 
     def is_enabled(self):
-        return os.path.splitext(self.view.file_name())[-1].strip('.') in ['md', 'markdown']
+        settings = sublime.load_settings('Blimey.sublime-settings')
+        return settings.get('md-heading-numbers', False) and os.path.splitext(self.view.file_name())[-1].strip('.') in ['md', 'markdown']
 
 
 class MarkdownHeadingsListener(sublime_plugin.EventListener):
